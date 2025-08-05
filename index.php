@@ -1,13 +1,16 @@
 <?php
-$serverName = "182.253.37.109";
-$connectionOptions = array(
+$serverName = "tcp:182.253.37.109,56526";
+$connectionOptions = [
     "Database" => "AVISENA",
     "Uid" => "Agus",
     "PWD" => "1437157",
-    "Encrypt" => true,
-    "TrustServerCertificate" => true
-);
+    "Encrypt" => false,
+    "TrustServerCertificate" => true,
+    "LoginTimeout" => 30,
+];
+
 $conn = sqlsrv_connect($serverName, $connectionOptions);
+
 if ($conn === false) {
     die(print_r(sqlsrv_errors(), true));
 }
@@ -65,62 +68,84 @@ if (!$editData) {
 }
 ?>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-<div class="container mt-4">
-    <h2>Form <?= $editData ? 'Edit' : 'Tambah' ?> Data Klinik</h2>
-    <form method="POST" class="row g-3 mb-4">
-        <div class="col-md-4">
-            <label class="form-label">NO_KLINIK</label>
-            <input type="text" name="NO_KLINIK" class="form-control" value="<?= $nextNo ?>" readonly required>
+<!-- Load Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="max-w-5xl mx-auto mt-8 p-4">
+    <h2 class="text-2xl font-semibold mb-6">Form <?= $editData ? 'Edit' : 'Tambah' ?> Data Klinik</h2>
+    <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div>
+            <label class="block mb-1 font-medium text-gray-700">NO_KLINIK</label>
+            <input type="text" name="NO_KLINIK" value="<?= htmlspecialchars($nextNo) ?>" readonly required
+                class="w-full rounded border border-gray-300 px-3 py-2 bg-gray-100 cursor-not-allowed" />
         </div>
-        <div class="col-md-4">
-            <label class="form-label">NAMA_KLINIK</label>
-            <input type="text" name="NAMA_KLINIK" class="form-control" value="<?= $editData['NAMA_KLINIK'] ?? '' ?>"
-                required>
+        <div>
+            <label class="block mb-1 font-medium text-gray-700">NAMA_KLINIK</label>
+            <input type="text" name="NAMA_KLINIK" required
+                value="<?= htmlspecialchars($editData['NAMA_KLINIK'] ?? '') ?>"
+                class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-        <div class="col-md-4">
-            <label class="form-label">Image URL</label>
-            <input type="text" name="image" class="form-control" value="<?= $editData['image'] ?? '' ?>">
+        <div>
+            <label class="block mb-1 font-medium text-gray-700">Image URL</label>
+            <input type="text" name="image" value="<?= htmlspecialchars($editData['image'] ?? '') ?>"
+                class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-        <div class="col-12">
+        <div class="md:col-span-3 flex space-x-4">
             <?php if ($editData): ?>
-                <button type="submit" name="update" class="btn btn-warning">Update</button>
-                <a href="index.php" class="btn btn-secondary">Batal</a>
+                <button type="submit" name="update"
+                    class="px-5 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">Update</button>
+                <a href="index.php"
+                    class="inline-block px-5 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition">Batal</a>
             <?php else: ?>
-                <button type="submit" name="add" class="btn btn-primary">Tambah</button>
+                <button type="submit" name="add"
+                    class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Tambah</button>
             <?php endif; ?>
         </div>
     </form>
 
-    <h2>Data Klinik</h2>
-    <table class="table table-bordered table-striped">
-        <thead class="table-primary">
-            <tr>
-                <th>No</th>
-                <th>Id Klinik</th>
-                <th>Nama Klinik</th>
-                <th>Image</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $no = 1;
-            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)):
-                ?>
+    <h2 class="text-2xl font-semibold mb-4">Data Klinik</h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+            <thead class="bg-blue-600 text-white">
                 <tr>
-                    <td><?= $no ?></td>
-                    <td><?= htmlspecialchars($row['NO_KLINIK']) ?></td>
-                    <td><?= htmlspecialchars($row['NAMA_KLINIK']) ?></td>
-                    <td><img src="<?= htmlspecialchars($row['image']) ?>" width="50"></td>
-                    <td>
-                        <a href="?edit=<?= urlencode($row['NO_KLINIK']) ?>" class="btn btn-sm btn-warning">Edit</a>
-                        <a href="?delete=<?= urlencode($row['NO_KLINIK']) ?>" class="btn btn-sm btn-danger"
-                            onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
-                    </td>
+                    <th class="py-3 px-4 text-left text-sm font-medium">No</th>
+                    <th class="py-3 px-4 text-left text-sm font-medium">Id Klinik</th>
+                    <th class="py-3 px-4 text-left text-sm font-medium">Nama Klinik</th>
+                    <th class="py-3 px-4 text-left text-sm font-medium">Image</th>
+                    <th class="py-3 px-4 text-left text-sm font-medium">Aksi</th>
                 </tr>
-                <?php $no++; endwhile; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="bg-white">
+                <?php
+                $no = 1;
+                while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)):
+                ?>
+                    <tr class="border-t border-gray-200 hover:bg-gray-50">
+                        <td class="py-2 px-4 text-sm align-middle"><?= $no ?></td>
+                        <td class="py-2 px-4 text-sm align-middle"><?= htmlspecialchars($row['NO_KLINIK']) ?></td>
+                        <td class="py-2 px-4 text-sm align-middle"><?= htmlspecialchars($row['NAMA_KLINIK']) ?></td>
+                        <td class="py-2 px-4 align-middle">
+                            <?php if (!empty($row['image'])): ?>
+                                <img src="<?= htmlspecialchars($row['image']) ?>" alt="Image Klinik" class="w-12 h-12 object-cover rounded" />
+                            <?php else: ?>
+                                <span class="text-gray-400 text-sm">No Image</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="py-2 px-4 text-sm align-middle space-x-2">
+                            <a href="?edit=<?= urlencode($row['NO_KLINIK']) ?>"
+                                class="inline-block px-3 py-1 bg-yellow-400 text-yellow-900 rounded hover:bg-yellow-500 transition">Edit</a>
+                            <a href="?delete=<?= urlencode($row['NO_KLINIK']) ?>"
+                                onclick="return confirm('Yakin ingin menghapus?')"
+                                class="inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">Hapus</a>
+                        </td>
+                    </tr>
+                <?php
+                    $no++;
+                endwhile;
+                ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <?php sqlsrv_close($conn); ?>
