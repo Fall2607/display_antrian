@@ -1,3 +1,9 @@
+<?php
+// Menentukan path dasar secara dinamis berdasarkan lokasi file yang memanggilnya
+$is_in_pages_folder = basename(dirname($_SERVER['PHP_SELF'])) == 'pages';
+$dashboard_path = $is_in_pages_folder ? '../index.php' : 'index.php';
+$pages_path = $is_in_pages_folder ? '' : 'pages/';
+?>
 <!-- Sidebar -->
 <aside id="sidebar"
     class="w-64 bg-gray-800 text-white p-6 fixed h-full transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 z-10">
@@ -6,21 +12,22 @@
         <?php $current_page = basename($_SERVER['PHP_SELF']); ?>
         <ul>
             <li class="mb-4">
-                <a href="index.php"
+                <a href="<?= $dashboard_path ?>"
                     class="flex items-center p-2 rounded-md transition-colors <?= ($current_page == 'index.php') ? 'bg-gray-700 text-white' : 'text-gray-400 hover:bg-gray-700'; ?>">
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
             </li>
             <li class="mb-4">
-                <a href="klinik.php"
+                <a href="<?= $pages_path ?>klinik.php"
                     class="flex items-center p-2 rounded-md transition-colors <?= ($current_page == 'klinik.php') ? 'bg-gray-700 text-white' : 'text-gray-400 hover:bg-gray-700'; ?>">
                     <i class="fas fa-hospital mr-3"></i>
                     Manajemen Klinik
                 </a>
             </li>
             <li class="mb-4">
-                <a href="#" class="flex items-center p-2 text-gray-400 hover:bg-gray-700 rounded-md transition-colors">
+                <a href="<?= $pages_path ?>dokter_poli.php"
+                    class="flex items-center p-2 rounded-md transition-colors <?= ($current_page == 'dokter_poli.php') ? 'bg-gray-700 text-white' : 'text-gray-400 hover:bg-gray-700'; ?>">
                     <i class="fas fa-user-md mr-3"></i>
                     Manajemen Dokter
                 </a>

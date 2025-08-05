@@ -1,6 +1,6 @@
 <!-- Footer Sederhana -->
 <footer class="text-center p-4 text-sm text-gray-500 mt-auto">
-    &copy; <?= date("Y") ?> Panel Admin. Hak Cipta Dilindungi.
+    &copy; <?= date("Y") ?> Fallen~.
 </footer>
 
 </main> <!-- Penutup dari <main> -->
