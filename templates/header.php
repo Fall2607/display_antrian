@@ -24,7 +24,52 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+
+        /* Style untuk menyembunyikan teks saat sidebar diciutkan */
+        .sidebar-collapsed .sidebar-text,
+        .sidebar-collapsed .sidebar-header-text {
+            display: none;
+        }
+
+        .sidebar-collapsed .sidebar-header {
+            justify-content: center;
+        }
+
+        .sidebar-collapsed .sidebar-link {
+            justify-content: center;
+        }
+
+        /* Aturan CSS baru untuk mencegah kedipan saat memuat halaman */
+        .sidebar-collapsed-init #sidebar {
+            width: 5rem;
+            /* w-20 */
+        }
+
+        .sidebar-collapsed-init #main-content {
+            margin-left: 5rem;
+            /* md:ml-20 */
+        }
+
+        .sidebar-collapsed-init .sidebar-text,
+        .sidebar-collapsed-init .sidebar-header-text {
+            display: none;
+        }
+
+        .sidebar-collapsed-init .sidebar-header,
+        .sidebar-collapsed-init .sidebar-link {
+            justify-content: center;
+        }
+
+        .sidebar-collapsed-init #sidebar-toggle-icon {
+            transform: rotate(180deg);
+        }
     </style>
+    <script>
+        // Jalankan skrip ini segera untuk menambahkan kelas sementara
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            document.documentElement.classList.add('sidebar-collapsed-init');
+        }
+    </script>
 </head>
 
 <body class="bg-gray-100 font-sans">
@@ -33,7 +78,7 @@
         <?php require_once 'sidebar.php'; ?>
 
         <!-- Wrapper Konten Utama dengan Margin untuk Sidebar -->
-        <div class="flex-1 flex flex-col md:ml-64">
+        <div id="main-content" class="flex-1 flex flex-col md:ml-64 transition-all duration-300 ease-in-out">
             <!-- Header -->
             <header
                 class="bg-white/80 backdrop-blur-sm shadow-md p-4 flex justify-between items-center sticky top-0 z-10">

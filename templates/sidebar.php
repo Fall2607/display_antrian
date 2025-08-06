@@ -5,11 +5,11 @@ $pages_path = $is_in_pages_folder ? '' : 'pages/';
 ?>
 <!-- Sidebar -->
 <aside id="sidebar"
-    class="w-64 bg-gray-800 text-white fixed h-full transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 z-20 flex flex-col">
+    class="bg-gray-800 text-white fixed h-full transition-all duration-300 ease-in-out -translate-x-full md:translate-x-0 z-20 flex flex-col w-64">
     <!-- Logo/Header Sidebar -->
-    <div class="p-6 text-center border-b border-gray-700">
-        <h1 class="text-2xl font-bold text-white">Admin Panel</h1>
-        <p class="text-sm text-gray-400">RSU Avisena</p>
+    <div class="sidebar-header p-6 text-center border-b border-gray-700">
+        <h1 class="text-2xl font-bold text-white sidebar-header-text">Admin Panel</h1>
+        <p class="text-sm text-gray-400 sidebar-header-text">RSU Avisena</p>
     </div>
 
     <!-- Menu Navigasi -->
@@ -18,37 +18,37 @@ $pages_path = $is_in_pages_folder ? '' : 'pages/';
         <ul class="space-y-2">
             <li>
                 <a href="<?= $dashboard_path ?>"
-                    class="flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'index.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
+                    class="sidebar-link flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'index.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
                     <i class="fas fa-tachometer-alt fa-fw w-6 text-center"></i>
-                    <span>Dashboard</span>
+                    <span class="sidebar-text">Dashboard</span>
                 </a>
             </li>
             <li>
                 <a href="<?= $pages_path ?>poliklinik.php"
-                    class="flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'poliklinik.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
+                    class="sidebar-link flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'poliklinik.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
                     <i class="fas fa-clinic-medical fa-fw w-6 text-center"></i>
-                    <span>Manajemen Poli</span>
+                    <span class="sidebar-text">Manajemen Poli</span>
                 </a>
             </li>
             <li>
                 <a href="<?= $pages_path ?>klinik.php"
-                    class="flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'klinik.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
+                    class="sidebar-link flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'klinik.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
                     <i class="fas fa-hospital fa-fw w-6 text-center"></i>
-                    <span>Manajemen Klinik</span>
+                    <span class="sidebar-text">Manajemen Klinik</span>
                 </a>
             </li>
             <li>
                 <a href="<?= $pages_path ?>dokter_poli.php"
-                    class="flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'dokter_poli.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
+                    class="sidebar-link flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'dokter_poli.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
                     <i class="fas fa-user-md fa-fw w-6 text-center"></i>
-                    <span>Manajemen Dokter</span>
+                    <span class="sidebar-text">Manajemen Dokter</span>
                 </a>
             </li>
             <li>
                 <a href="<?= $pages_path ?>display_antrian.php"
-                    class="flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'display_antrian.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
+                    class="sidebar-link flex items-center gap-3 p-3 rounded-lg transition-colors <?= ($current_page == 'display_antrian.php') ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'; ?>">
                     <i class="fas fa-desktop fa-fw w-6 text-center"></i>
-                    <span>Display Antrian</span>
+                    <span class="sidebar-text">Display Antrian</span>
                 </a>
             </li>
         </ul>
@@ -56,10 +56,9 @@ $pages_path = $is_in_pages_folder ? '' : 'pages/';
 
     <!-- Footer Sidebar -->
     <div class="p-4 border-t border-gray-700">
-        <a href="#"
-            class="flex items-center gap-3 p-3 rounded-lg text-gray-300 hover:bg-red-600 hover:text-white transition-colors">
-            <i class="fas fa-sign-out-alt fa-fw w-6 text-center"></i>
-            <span>Logout</span>
-        </a>
+        <button id="sidebar-toggle"
+            class="hidden md:flex w-full items-center justify-center gap-3 p-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+            <i class="fas fa-chevron-left fa-fw w-6 text-center transition-transform" id="sidebar-toggle-icon"></i>
+        </button>
     </div>
 </aside>
