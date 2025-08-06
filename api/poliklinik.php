@@ -27,7 +27,7 @@ try {
         case 'GET':
             if (isset($_GET['id'])) {
                 $id = $_GET['id'];
-                $sql = "SELECT dp.*, p.Poli FROM Dokter_Poli dp LEFT JOIN Poliklinik p ON dp.No_Poli = p.No_Poli WHERE dp.Nama_Dr = ?";
+                $sql = "SELECT * FROM Poliklinik WHERE No_Poli = ?";
                 $stmt = sqlsrv_query($conn, $sql, array($id));
                 if ($stmt === false)
                     throw new Exception("Query untuk mengambil data tunggal gagal.");
@@ -36,86 +36,86 @@ try {
                 $response['data'] = $data;
             } else {
                 $search = $_GET['search'] ?? '';
-                $sesi = $_GET['sesi'] ?? '';
-                $whereClauses = [];
-                $params = [];
-
-                if (!empty($sesi)) {
-                    $whereClauses[] = "(dp.NoDisplay = ? OR dp.Nama_Dr = 'Fisioterapi / Rehab')";
-                    $params[] = $sesi;
-                }
+                $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+                $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 5;
+                $offset = ($page - 1) * $limit;
+                $data = [];
+                $totalRecords = 0;
+                $whereClause = "";
+                $searchParams = [];
 
                 if (!empty($search)) {
-                    $whereClauses[] = "dp.Nama_Dr LIKE ?";
-                    $params[] = "%" . $search . "%";
+                    $whereClause = " WHERE Poli LIKE ?";
+                    $searchParams[] = "%" . $search . "%";
                 }
 
-                $whereSql = "";
-                if (!empty($whereClauses)) {
-                    $whereSql = " WHERE " . implode(" AND ", $whereClauses);
+                $countSql = "SELECT COUNT(*) as total FROM Poliklinik" . $whereClause;
+                $countStmt = sqlsrv_query($conn, $countSql, $searchParams);
+                if ($countStmt) {
+                    $totalRecords = sqlsrv_fetch_array($countStmt, SQLSRV_FETCH_ASSOC)['total'];
                 }
 
-                $sql = "SELECT dp.*, p.Poli FROM Dokter_Poli dp LEFT JOIN Poliklinik p ON dp.No_Poli = p.No_Poli" . $whereSql . " ORDER BY dp.Nama_Dr ASC";
-                $stmt = sqlsrv_query($conn, $sql, $params);
+                $dataSql = "
+                    WITH NumberedPoli AS (
+                        SELECT *, ROW_NUMBER() OVER (ORDER BY No_Poli ASC) as rownum
+                        FROM Poliklinik
+                        " . $whereClause . "
+                    )
+                    SELECT * FROM NumberedPoli WHERE rownum > ? AND rownum <= ?
+                ";
+                $params = array_merge($searchParams, [$offset, $offset + $limit]);
+                $stmt = sqlsrv_query($conn, $dataSql, $params);
                 if ($stmt === false)
                     throw new Exception("Query untuk mengambil semua data gagal.");
 
-                $data = [];
                 while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                    unset($row['rownum']);
                     $data[] = $row;
                 }
+
                 $response['status'] = 'success';
                 $response['data'] = $data;
+                $response['pagination'] = ['page' => $page, 'limit' => $limit, 'totalRecords' => $totalRecords, 'totalPages' => ceil($totalRecords / $limit)];
             }
             break;
 
-        // POST, PUT, DELETE cases remain the same
         case 'POST':
-            if (!isset($input['No_Poli'], $input['Nama_Dr'])) {
-                throw new Exception("Input tidak valid. No Poli dan Nama Dokter wajib diisi.");
+            if (!isset($input['No_Poli'], $input['Poli'])) {
+                throw new Exception("Input tidak valid. No Poli dan Nama Poli wajib diisi.");
             }
-            $sql = "INSERT INTO Dokter_Poli (No_Poli, Nama_Dr, Jam_Praktek, Minim, Maxim, NoAntri, NoDisplay, NoUrut, Loket) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO Poliklinik (No_Poli, Poli, Batas, Kode_klinik) VALUES (?, ?, ?, ?)";
             $params = [
                 $input['No_Poli'],
-                $input['Nama_Dr'],
-                $input['Jam_Praktek'] ?? '',
-                $input['Minim'] ?? 0,
-                $input['Maxim'] ?? 0,
-                $input['NoAntri'] ?? 0,
-                empty($input['NoDisplay']) ? null : $input['NoDisplay'],
-                $input['NoUrut'] ?? 0,
-                $input['Loket'] ?? ''
+                $input['Poli'],
+                $input['Batas'] ?? null,
+                $input['Kode_klinik'] ?? null
             ];
             $stmt = sqlsrv_query($conn, $sql, $params);
             if ($stmt) {
                 $response['status'] = 'success';
-                $response['message'] = 'Data dokter berhasil ditambahkan.';
+                $response['message'] = 'Data poliklinik berhasil ditambahkan.';
                 http_response_code(201);
                 notifyWebSocketServer();
             } else {
-                throw new Exception("Gagal menambahkan data. Pastikan No Poli atau Nama Dokter unik jika diperlukan.");
+                throw new Exception("Gagal menambahkan data. Pastikan No Poli unik.");
             }
             break;
 
         case 'PUT':
-            if (!isset($input['original_Nama_Dr'], $input['Nama_Dr'])) {
+            if (!isset($input['No_Poli'], $input['Poli'])) {
                 throw new Exception("Input tidak valid untuk pembaruan.");
             }
-            $sql = "UPDATE Dokter_Poli SET No_Poli = ?, Nama_Dr = ?, Jam_Praktek = ?, Minim = ?, Maxim = ?, NoDisplay = ?, Loket = ? WHERE Nama_Dr = ?";
+            $sql = "UPDATE Poliklinik SET Poli = ?, Batas = ?, Kode_klinik = ? WHERE No_Poli = ?";
             $params = [
-                $input['No_Poli'],
-                $input['Nama_Dr'],
-                $input['Jam_Praktek'] ?? '',
-                $input['Minim'] ?? 0,
-                $input['Maxim'] ?? 0,
-                empty($input['NoDisplay']) ? null : $input['NoDisplay'],
-                $input['Loket'] ?? '',
-                $input['original_Nama_Dr']
+                $input['Poli'],
+                $input['Batas'] ?? null,
+                $input['Kode_klinik'] ?? null,
+                $input['No_Poli']
             ];
             $stmt = sqlsrv_query($conn, $sql, $params);
             if ($stmt) {
                 $response['status'] = 'success';
-                $response['message'] = 'Data dokter berhasil diperbarui.';
+                $response['message'] = 'Data poliklinik berhasil diperbarui.';
                 notifyWebSocketServer();
             } else {
                 throw new Exception("Gagal memperbarui data.");
@@ -127,11 +127,11 @@ try {
                 throw new Exception("ID tidak ditemukan untuk penghapusan.");
             }
             $id = $_GET['id'];
-            $sql = "DELETE FROM Dokter_Poli WHERE Nama_Dr = ?";
+            $sql = "DELETE FROM Poliklinik WHERE No_Poli = ?";
             $stmt = sqlsrv_query($conn, $sql, array($id));
             if ($stmt) {
                 $response['status'] = 'success';
-                $response['message'] = 'Data dokter berhasil dihapus.';
+                $response['message'] = 'Data poliklinik berhasil dihapus.';
                 notifyWebSocketServer();
             } else {
                 throw new Exception("Gagal menghapus data.");

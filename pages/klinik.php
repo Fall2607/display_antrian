@@ -1,71 +1,71 @@
 <?php
-// Memanggil header dari folder templates di root
 require_once '../templates/header.php';
 ?>
 
 <!-- Content Area -->
 <main class="flex-1 p-6 overflow-y-auto">
-    <!-- FORMULIR -->
-    <div id="form-section" class="bg-white p-6 rounded-lg shadow-md">
-        <h2 id="form-title" class="text-2xl font-semibold mb-6">Form Tambah Data Klinik</h2>
+    <!-- Form Card -->
+    <div id="form-section" class="bg-white p-6 rounded-lg shadow-lg mb-8">
+        <h2 id="form-title" class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6">Form Tambah Data Klinik</h2>
 
-        <form id="klinik-form" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <input type="hidden" id="no-klinik-edit" name="NO_KLINIK">
+        <form id="klinik-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label class="block mb-1 font-medium text-gray-700">NO_KLINIK</label>
+                <label class="block mb-2 font-semibold text-gray-700">NO KLINIK</label>
                 <input type="text" id="no-klinik-display" readonly
-                    class="w-full rounded border border-gray-300 px-3 py-2 bg-gray-100 cursor-not-allowed" />
+                    class="w-full rounded border-gray-300 px-4 py-2 bg-gray-100 cursor-not-allowed" />
+                <input type="hidden" id="no-klinik-edit" name="NO_KLINIK">
             </div>
             <div>
-                <label class="block mb-1 font-medium text-gray-700">NAMA_KLINIK</label>
+                <label for="nama-klinik" class="block mb-2 font-semibold text-gray-700">Nama Klinik</label>
                 <input type="text" id="nama-klinik" name="NAMA_KLINIK" required
-                    class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    class="w-full rounded border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
             </div>
-            <div>
-                <label class="block mb-1 font-medium text-gray-700">Image URL</label>
+            <div class="md:col-span-2">
+                <label for="image-url" class="block mb-2 font-semibold text-gray-700">Image URL</label>
                 <input type="text" id="image-url" name="image"
-                    class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    class="w-full rounded border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
             </div>
-            <div id="form-buttons" class="md:col-span-3 flex space-x-4">
-                <button type="submit" name="add"
-                    class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Tambah</button>
+            <div id="form-buttons" class="md:col-span-2 flex justify-end gap-4">
+                <button type="submit"
+                    class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all flex items-center gap-2">
+                    <i class="fas fa-save"></i>
+                    <span>Tambah</span>
+                </button>
             </div>
         </form>
     </div>
 
-    <!-- TABEL DATA -->
-    <div class="bg-white p-6 rounded-lg shadow-md mt-8">
+    <!-- Table Card -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
         <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
-            <h2 class="text-2xl font-semibold">Data Klinik</h2>
+            <h2 class="text-2xl font-bold text-gray-800">Data Klinik</h2>
             <div class="flex w-full md:w-auto items-center gap-4">
                 <div class="flex items-center gap-2">
                     <label for="rows-per-page" class="text-sm font-medium text-gray-700">Baris:</label>
-                    <select id="rows-per-page"
-                        class="px-2 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="rows-per-page" class="px-2 py-1 border border-gray-300 rounded-md text-sm">
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
-                        <option value="50">50</option>
                     </select>
                 </div>
                 <div class="w-full md:w-64">
                     <input type="text" id="search-input" placeholder="Cari nama klinik..."
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md">
                 </div>
             </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
-                <thead class="bg-blue-600 text-white">
+            <table class="min-w-full">
+                <thead class="bg-gray-100">
                     <tr>
-                        <th class="py-3 px-4 text-left text-sm font-medium">No</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium">Id Klinik</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium">Nama Klinik</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium">Image</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium">Aksi</th>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600">No</th>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600">Id Klinik</th>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600">Nama Klinik</th>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600">Image</th>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600">Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="klinik-table-body" class="bg-white"></tbody>
+                <tbody id="klinik-table-body" class="bg-white divide-y divide-gray-200"></tbody>
             </table>
         </div>
         <div id="pagination-container" class="flex justify-end items-center mt-4"></div>
@@ -89,7 +89,8 @@ require_once '../templates/header.php';
             let rowsPerPage = parseInt(rowsPerPageSelect.value, 10);
 
             function connectWebSocket() {
-                const socket = new WebSocket('ws://127.0.0.1:8080');
+                const wsHost = `ws://${window.location.hostname}:8080`;
+                const socket = new WebSocket(wsHost);
                 socket.onopen = () => console.log("Koneksi WebSocket Klinik berhasil dibuat!");
                 socket.onmessage = (event) => {
                     const data = JSON.parse(event.data);
@@ -114,7 +115,6 @@ require_once '../templates/header.php';
                         tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-gray-500">Gagal memuat data.</td></tr>`;
                     }
                 } catch (error) {
-                    console.error('Error fetching data:', error);
                     tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">Terjadi kesalahan.</td></tr>`;
                 }
             }
@@ -128,16 +128,16 @@ require_once '../templates/header.php';
                 let no = (currentPage - 1) * rowsPerPage + 1;
                 data.forEach(klinik => {
                     const row = `
-                    <tr class="border-t border-gray-200 hover:bg-gray-50">
-                        <td class="py-2 px-4 text-sm align-middle">${no++}</td>
-                        <td class="py-2 px-4 text-sm align-middle">${klinik.NO_KLINIK}</td>
-                        <td class="py-2 px-4 text-sm align-middle">${klinik.NAMA_KLINIK}</td>
-                        <td class="py-2 px-4 align-middle">
-                            ${klinik.image ? `<img src="${klinik.image}" alt="Image Klinik" class="w-12 h-12 object-cover rounded" onerror="this.onerror=null;this.src='https://placehold.co/48x48/E2E8F0/4A5568?text=Error';"/>` : `<span class="text-gray-400 text-sm">No Image</span>`}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-3 px-4 text-sm">${no++}</td>
+                        <td class="py-3 px-4 text-sm">${klinik.NO_KLINIK}</td>
+                        <td class="py-3 px-4 text-sm font-semibold">${klinik.NAMA_KLINIK}</td>
+                        <td class="py-3 px-4 text-sm">
+                            ${klinik.image ? `<img src="${klinik.image}" alt="Image Klinik" class="w-16 h-16 object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/64x64/E2E8F0/4A5568?text=Error';"/>` : `<span class="text-gray-400">No Image</span>`}
                         </td>
-                        <td class="py-2 px-4 text-sm align-middle space-x-2">
-                            <button data-action="edit" data-id="${klinik.NO_KLINIK}" class="inline-block px-3 py-1 bg-yellow-400 text-yellow-900 rounded hover:bg-yellow-500 transition text-xs">Edit</button>
-                            <button data-action="delete" data-id="${klinik.NO_KLINIK}" class="inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-xs">Hapus</button>
+                        <td class="py-3 px-4 text-sm space-x-2">
+                            <button data-action="edit" data-id="${klinik.NO_KLINIK}" class="text-yellow-500 hover:text-yellow-700"><i class="fas fa-pencil-alt"></i></button>
+                            <button data-action="delete" data-id="${klinik.NO_KLINIK}" class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 `;
@@ -151,22 +151,19 @@ require_once '../templates/header.php';
                 if (totalPages <= 1) return;
                 const createButton = (p, text, disabled = false) => {
                     const activeClass = p === page ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300';
-                    const disabledClass = disabled ? 'opacity-50 cursor-not-allowed' : '';
-                    return `<button onclick="changePage(${p})" ${disabled ? 'disabled' : ''} class="px-3 py-1 mx-1 text-sm rounded ${activeClass} ${disabledClass}">${text}</button>`;
+                    return `<button onclick="changePage(${p})" ${disabled ? 'disabled' : ''} class="px-3 py-1 mx-1 text-sm rounded ${activeClass} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}">${text}</button>`;
                 };
                 paginationContainer.innerHTML += createButton(page - 1, 'Sebelumnya', page <= 1);
-                for (let i = 1; i <= totalPages; i++) {
-                    paginationContainer.innerHTML += createButton(i, i);
-                }
+                for (let i = 1; i <= totalPages; i++) paginationContainer.innerHTML += createButton(i, i);
                 paginationContainer.innerHTML += createButton(page + 1, 'Berikutnya', page >= totalPages);
             }
 
-            window.changePage = function (newPage) {
+            window.changePage = (newPage) => {
                 if (newPage > 0) {
                     currentPage = newPage;
                     fetchDataAndRender();
                 }
-            }
+            };
 
             let debounceTimer;
             searchInput.addEventListener('input', () => {
@@ -187,9 +184,8 @@ require_once '../templates/header.php';
             function resetForm() {
                 form.reset();
                 form.dataset.mode = 'add';
-                document.getElementById('no-klinik-edit').value = '';
                 formTitle.textContent = 'Form Tambah Data Klinik';
-                formButtons.innerHTML = `<button type="submit" name="add" class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Tambah</button>`;
+                formButtons.innerHTML = `<button type="submit" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all flex items-center gap-2"><i class="fas fa-save"></i><span>Tambah</span></button>`;
                 document.getElementById('no-klinik-display').value = 'Otomatis';
             }
 
@@ -214,17 +210,18 @@ require_once '../templates/header.php';
                 }
             });
 
-            tableBody.addEventListener('click', function (e) {
-                const target = e.target;
-                const action = target.dataset.action;
-                const id = target.dataset.id;
+            tableBody.addEventListener('click', (e) => {
+                const button = e.target.closest('button');
+                if (!button) return;
+                const action = button.dataset.action;
+                const id = button.dataset.id;
                 if (!action || !id) return;
                 if (action === 'edit') handleEdit(id);
                 else if (action === 'delete') handleDelete(id);
             });
 
-            formButtons.addEventListener('click', function (e) {
-                if (e.target.matches('button[data-action="cancel"]')) {
+            formButtons.addEventListener('click', (e) => {
+                if (e.target.closest('button[data-action="cancel"]')) {
                     resetForm();
                 }
             });
@@ -245,8 +242,8 @@ require_once '../templates/header.php';
                         document.getElementById('image-url').value = data.image;
 
                         formButtons.innerHTML = `
-                        <button type="submit" class="px-5 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">Update</button>
-                        <button type="button" data-action="cancel" class="px-5 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition">Batal</button>
+                        <button type="button" data-action="cancel" class="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition-all flex items-center gap-2"><i class="fas fa-times"></i><span>Batal</span></button>
+                        <button type="submit" class="px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition-all flex items-center gap-2"><i class="fas fa-save"></i><span>Update</span></button>
                     `;
                         formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     } else {
@@ -287,6 +284,5 @@ require_once '../templates/header.php';
     </script>
 
     <?php
-    // Memanggil footer dari folder templates di root
     require_once '../templates/footer.php';
     ?>
